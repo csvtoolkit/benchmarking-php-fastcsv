@@ -1,0 +1,17 @@
+{
+    "name": "csvtoolkit/fastcsv-benchmark",
+    "description": "Benchmark suite for FastCSV extension vs native PHP",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "csvtoolkit/csv-helper": "^0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "FastCSVBench\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+} 

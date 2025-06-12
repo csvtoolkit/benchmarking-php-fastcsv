@@ -1,0 +1,38 @@
+# Ignore benchmark results
+results/*
+!results/.gitkeep
+
+# Ignore generated test data
+data/*
+!data/.gitkeep
+
+# Ignore temporary/debug files
+*.log
+*.tmp
+debug_*.php
+*_debug.php
+
+# Ignore vendor directories
+shared/vendor/
+**/vendor/
+
+# Ignore composer lock files in shared (since it's generated)
+shared/composer.lock
+
+# Ignore Docker volumes and temporary files
+.docker/
+*.pid
+
+# Ignore IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Keep important empty directories
+!.gitkeep 

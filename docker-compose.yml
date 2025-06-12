@@ -1,0 +1,56 @@
+
+services:
+  # Container with FastCSV extension
+  app-fastcsv:
+    build: 
+      context: ./app-fastcsv
+      dockerfile: Dockerfile
+    container_name: fastcsv-bench
+    volumes:
+      - ./shared:/app/shared
+      - ./data:/app/data
+      - ./results:/app/results
+    working_dir: /app
+    command: sleep infinity
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  # Container without FastCSV extension (fallback to SplFileObject)
+  app-native:
+    build:
+      context: ./app-native
+      dockerfile: Dockerfile
+    container_name: native-bench
+    volumes:
+      - ./shared:/app/shared
+      - ./data:/app/data
+      - ./results:/app/results
+    working_dir: /app
+    command: sleep infinity
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  # Benchmark runner container
+  benchmark:
+    build:
+      context: ./benchmark
+      dockerfile: Dockerfile
+    container_name: benchmark-runner
+    depends_on: 
+      - app-fastcsv
+      - app-native
+    volumes:
+      - ./shared:/app/shared
+      - ./results:/app/results
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /app/shared
+    command: sleep infinity 
