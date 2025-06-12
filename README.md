@@ -4,8 +4,6 @@ This directory contains a comprehensive benchmarking system for comparing FastCS
 
 ## 🎯 **What This Demonstrates**
 
-After fixing the [O(n²) performance bug](../package/src/Readers/SplCsvReader.php) in SplCsvReader, this benchmark suite proves:
-
 - **FastCSV Extension**: 4-7x faster performance when available
 - **SplFileObject Fallback**: Reliable, memory-efficient performance  
 - **Memory Efficiency**: Both implementations use constant memory (streaming)
@@ -315,26 +313,5 @@ docker stats
 4. **Monitor system resources** during large dataset tests
 5. **Compare results** between FastCSV and native implementations
 6. **Document your findings** with timestamps and system specifications
-
-## File Structure
-
-```
-demo/
-├── README.md                    # This file
-├── docker-compose.yml           # Multi-container setup
-├── app-fastcsv/                 # FastCSV container
-│   └── Dockerfile
-├── app-native/                  # Native PHP container  
-│   └── Dockerfile
-├── benchmark/                   # Orchestrator container
-│   └── Dockerfile
-├── shared/                      # Shared codebase
-│   ├── benchmark.php           # Main benchmark script
-│   ├── prepare_test_data.py    # Data preparation script
-│   ├── composer.json           # PHP dependencies
-│   └── vendor/                 # Composer packages
-├── data/                       # Test CSV files (generated)
-└── results/                    # Benchmark results (generated)
-```
 
 This setup ensures credible, reproducible benchmarks that accurately measure FastCSV performance without any interference from data generation overhead. 
