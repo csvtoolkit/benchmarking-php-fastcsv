@@ -4,7 +4,7 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "csvtoolkit/csv-helper": "^0.1"
+        "csvtoolkit/csv-helper": "^0.0.1"
     },
     "autoload": {
         "psr-4": {

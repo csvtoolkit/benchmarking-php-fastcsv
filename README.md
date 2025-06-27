@@ -4,10 +4,35 @@ This directory contains a comprehensive benchmarking system for comparing FastCS
 
 ## 🎯 **What This Demonstrates**
 
-- **FastCSV Extension**: 4-7x faster performance when available
-- **SplFileObject Fallback**: Reliable, memory-efficient performance  
+- **FastCSV Extension**: 3.6x to 4.8x faster performance for read operations
+- **Combined Operations**: 1.6x to 2.9x faster for read/write operations
 - **Memory Efficiency**: Both implementations use constant memory (streaming)
 - **Intelligent Fallback**: Seamless performance optimization in csv-helper package
+
+## 📊 **Latest Benchmark Results** (June 27, 2025)
+
+### Performance Comparison
+
+| Operation | Data Size | FastCSV | SplFileObject | Speed Improvement |
+|-----------|-----------|---------|---------------|-------------------|
+| **Read**  | Small     | 3.67ms  | 15.03ms       | **4.1x faster**   |
+|           | Medium    | 176ms   | 640ms         | **3.6x faster**   |
+|           | Large     | 1,987ms | 9,469ms       | **4.8x faster**   |
+| **Both**  | Small     | 22.8ms  | 35.5ms        | **1.6x faster**   |
+|           | Medium    | 591ms   | 1,469ms       | **2.5x faster**   |
+|           | Large     | 7,089ms | 20,513ms      | **2.9x faster**   |
+
+### Throughput Achievements
+- **FastCSV Read**: 272K-568K records/second
+- **SplFileObject Read**: 67K-156K records/second
+- **FastCSV Combined**: 88K-339K records/second
+- **SplFileObject Combined**: 56K-136K records/second
+
+### Key Findings
+- ✅ **Read Operations**: FastCSV shows 3.6x to 4.8x performance improvement
+- ✅ **Scalability**: Performance advantage increases with data size
+- ✅ **Memory Efficiency**: Constant ~2MB peak memory usage regardless of file size
+- ✅ **Consistency**: FastCSV shows lower standard deviation, indicating more predictable performance
 
 ## 📁 **Repository Structure**
 
@@ -205,16 +230,17 @@ Iterations per test: 3
 ╔══════════════════════════════════════════════════════════════╗
 ║ Testing: small (1,000 rows × 5 columns)                     ║
 ╚══════════════════════════════════════════════════════════════╝
-  → Iteration 1/3... 12.34ms, 2.1 MB peak
-  → Iteration 2/3... 11.89ms, 2.0 MB peak
-  → Iteration 3/3... 12.01ms, 2.1 MB peak
+  → Iteration 1/3... 3.67ms, 2.0 MB peak
+  → Iteration 2/3... 3.89ms, 2.0 MB peak
+  → Iteration 3/3... 3.45ms, 2.0 MB peak
 
   📊 Results Summary for small:
-  ├─ Execution time: 12.01ms (median), 12.08ms (avg) ±0.23ms
-  ├─ Throughput: 83,264 records/sec (median)
-  ├─ Memory efficiency: 2048.5 bytes/record
-  ├─ Peak memory: 2.1 MB (avg)
-  └─ Time per record: 0.0121ms
+  ├─ Execution time: 3.67ms (median), 3.67ms (avg) ±0.22ms
+  ├─ Throughput: 272,410 records/sec (median)
+  ├─ Memory used: <1KB (streaming - constant memory usage)
+  ├─ Memory efficiency: Constant (streaming)
+  ├─ Peak memory: 2.0 MB (total)
+  └─ Time per record: 0.0037ms
 
 ╔══════════════════════════════════════════════════════════════╗
 ║                    COMPARATIVE ANALYSIS                     ║
@@ -222,21 +248,21 @@ Iterations per test: 3
 
 📈 Performance Summary (FastCSV - read):
 ┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
-│ Data Size   │ Median Time │ Throughput  │ Memory/Rec  │ Efficiency  │
+│ Data Size   │ Median Time │ Throughput  │ Memory Used │ Peak Memory │
 ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-│ small       │    12.01ms  │   83,264/s  │   2048.5B   │    82.64x   │
-│ medium      │   890.45ms  │  112,345/s  │   1024.2B   │     1.12x   │
-│ large       │  8234.12ms  │  121,456/s  │    512.8B   │     0.12x   │
+│ small       │     3.67ms  │  272,410/s  │      <1KB   │     2.0MB   │
+│ medium      │   176.04ms  │  568,049/s  │      <1KB   │     2.0MB   │
+│ large       │  1,987.23ms │  503,212/s  │      <1KB   │     2.0MB   │
 └─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
 
 📊 Scalability Analysis:
-  • small → medium: 100.0x data → 74.1x time (efficiency: 1.35x)
-  • medium → large: 10.0x data → 9.2x time (efficiency: 1.08x)
+  • small → medium: 100.0x data → 47.9x time (efficiency: 2.09x)
+  • medium → large: 10.0x data → 11.3x time (efficiency: 0.89x)
 
 🎯 Recommendations:
   ✅ Using FastCSV extension - optimal performance achieved
   📊 Use these results as baseline for performance comparisons
-  🏆 Best throughput: large size (121,456 records/sec)
+
 ```
 
 ## Comparing Implementations
@@ -277,8 +303,8 @@ docker-compose exec app-fastcsv php -r "var_dump(extension_loaded('fastcsv'));"
 # Check implementation info
 docker-compose exec app-fastcsv php -r "
 require '/app/shared/vendor/autoload.php';
-use CsvToolkit\Factories\CsvFactory;
-var_dump(CsvFactory::getImplementationInfo());
+use CsvToolkit\Helpers\ExtensionHelper;
+var_dump(ExtensionHelper::getFastCsvInfo());
 "
 ```
 

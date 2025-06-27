@@ -2,7 +2,9 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use CsvToolkit\Factories\CsvFactory;
+use CsvToolkit\Factories\ReaderFactory;
+use CsvToolkit\Factories\WriterFactory;
+use CsvToolkit\Helpers\ExtensionHelper;
 
 // Memory limit is now set in Docker container to 1GB
 
@@ -22,7 +24,7 @@ $configs = [
     'large' => ['rows' => 1000000, 'cols' => 15]
 ];
 
-$implementation = CsvFactory::isFastCsvAvailable() ? 'FastCSV' : 'SplFileObject';
+$implementation = ExtensionHelper::isFastCsvAvailable() ? 'FastCSV' : 'SplFileObject';
 
 echo "=== FastCSV Comprehensive Benchmark ===\n";
 echo "Implementation: {$implementation}\n";
@@ -55,7 +57,7 @@ $masterResults = [
         'php_version' => PHP_VERSION,
         'memory_limit' => ini_get('memory_limit'),
         'timestamp' => date('Y-m-d H:i:s'),
-        'implementation_info' => CsvFactory::getImplementationInfo()
+        'implementation_info' => ExtensionHelper::getFastCsvInfo()
     ],
     'test_results' => [],
     'comparative_analysis' => []
@@ -220,7 +222,7 @@ function benchmarkRead($config, $iteration, $dataSize) {
         exit(1);
     }
     
-    $reader = CsvFactory::createReader($filename);
+    $reader = ReaderFactory::create($filename);
     $recordCount = 0;
     
     // Traditional pattern - but the underlying issue is in CsvReader::nextRecord()
@@ -239,7 +241,7 @@ function benchmarkRead($config, $iteration, $dataSize) {
 function benchmarkWrite($config, $iteration, $dataSize) {
     $filename = "/app/data/output_{$dataSize}_{$config['rows']}x{$config['cols']}_iter{$iteration}.csv";
     
-    $writer = CsvFactory::createWriter($filename);
+    $writer = WriterFactory::create($filename);
     
     // Write header
     $header = [];
@@ -356,7 +358,7 @@ function saveComprehensiveResults($masterResults, $operation, $implementation) {
         ];
     }
     
-    $csvWriter = CsvFactory::createWriter($csvFile);
+    $csvWriter = WriterFactory::create($csvFile);
     foreach ($csvData as $row) {
         $csvWriter->write($row);
     }
